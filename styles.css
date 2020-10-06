@@ -104,3 +104,114 @@ body {
     font-weight: 700;
     font-family: 'Dancing Script', cursive;
 }
+
+.form {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+    background: #e6bfdb;
+    width: 400px;
+    height: 400px;
+    top: 25%;
+    border: 10px solid  #9d5981;
+    border-radius: 10px;
+    color: #5c242a;
+    font-weight: 500;
+    font-size: 1rem;
+    padding-top: 2.5rem;
+    transform: scale(0);
+    transition: transform 500ms ease-in-out;
+}
+
+.form-active {
+    transform: scale(1);
+}
+
+.cancel-button {
+    position: absolute;
+    top: 5px;
+    right: 15px;
+    font-weight: 700;
+    font-size: 2.5rem;
+    color: #5c242a;
+    background: none;
+    border: none;
+}
+
+.cancel-button:hover {
+    transform: scale(1.2);
+    color: #9d5981;
+    cursor: pointer;
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 10px 25px;
+}
+.text-input{
+    margin-top: 5px;
+    border: 3px solid  #9d5981;
+    border-radius: 5px;
+    padding: 10px 5px;
+    width: 100%;
+    font-size: 1rem;
+    outline: none;
+}
+
+input::placeholder {
+    font-weight: 400;
+    font-size: 1rem;
+    color: #5c242a;
+    background: white;
+}
+
+.radio {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.radio label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.submit-button {
+    font-weight: 700;
+    font-size: 1.25rem;
+    text-align: center;
+    text-transform: uppercase;
+    color: #5c242a;
+    background: #e6bfdb;
+    border: 5px solid  #9d5981;
+    border-radius: 5px;    
+    margin: 20px auto 0;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.submit-button:hover {
+    transform: scale(1.1);
+    background: #e9e2ec;
+}
+
+#overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #e6bfdb;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 500ms ease-in-out;
+}
+
+.overlay-active {
+    pointer-events: all;
+    opacity: 1;
+}

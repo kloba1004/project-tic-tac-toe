@@ -9,6 +9,36 @@
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <form action="" class="form">
+        <button class="cancel-button">&times;</button>
+
+        <label for=".text-input">
+            First player
+            <input class="text-input" type="text" placeholder="Name" required>
+        </label>
+        
+        <label for=".text-input">
+            Secondplayer
+            <input class="text-input" type="text" placeholder="Name" required>
+        </label>
+        
+        <div class="radio">
+            <label for=".radio-button">
+                <input class="radio button" type="radio" name="gametype" value="single" checked>
+                Singleplayer
+            </label>
+            
+            <label for=".radio-button">
+                <input class="radio button" type="radio" name="gametype" value="multi" checked>
+                Multiplayer
+            </label>
+        </div>
+
+        <button class="submit-button">submit</button>
+    </form>
+
+    <div id="overlay"></div>
+
     <p class="main-title">Tic Tac Toe</p>
     
     <div class="container">
