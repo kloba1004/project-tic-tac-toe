@@ -3,16 +3,12 @@ const startButton = document.querySelector('.start-button');
 
 //add click events for form opening/closing
 startButton.addEventListener('click', () => {
-
     const form = document.querySelector('.form');
     const overlay = document.querySelector('#overlay');
     const cancelButton = document.querySelector('.cancel-button');
     
-    //add classes to form and overlay    
-    (() => {
-        form.classList.add('form-active');
-        overlay.className = 'overlay-active';
-    })();
+    form.classList.add('form-active');
+    overlay.className = 'overlay-active';
 
     function removeClass() {
         form.classList.remove('form-active');
@@ -26,16 +22,16 @@ startButton.addEventListener('click', () => {
     form.addEventListener('submit', (e) => {
         const submitInfo = document.querySelectorAll('input');
 
-        //factory function for creating  new pre-game information object
-        function Game(player1, player2, gameType) {
-            return { player1, player2, gameType };
-        }
-
         //check which radio button was checked
         let i = 3;
         if (submitInfo[2].checked) i = 2;
 
-        const gameInfo = Game(submitInfo[0].value, submitInfo[1].value, submitInfo[i].value);
+        //new game information to use for starting the game
+        const gameInfo = {
+            player1 : submitInfo[0].value,
+            player2 : submitInfo[1].value,
+            gameType : submitInfo[i],
+        }
 
         //remove classes from form and overlay, reset form inputs and prevent form from refreshing the page
         removeClass();
@@ -45,5 +41,17 @@ startButton.addEventListener('click', () => {
 });
 
 
+const squares = Array.from(document.querySelectorAll('.square'));
 
+//reset the game
+squares.map(square => square.textContent = "");
+
+//logic for swapping between players
+let i = 0;
+squares.forEach(square => square.addEventListener('click', (e) => {
+    if (e.target.textContent === "") {
+        i % 2 === 0 ? e.target.textContent = "X" : e.target.textContent = "O";
+        i++;
+    }
+}))
 
