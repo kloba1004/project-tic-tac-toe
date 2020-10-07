@@ -22,7 +22,7 @@ startButton.addEventListener('click', () => {
     form.addEventListener('submit', (e) => {
         const submitInfo = document.querySelectorAll('input');
 
-        //check which radio button was checked
+        //check which radio button(gametype) was checked
         let i = 3;
         if (submitInfo[2].checked) i = 2;
 
@@ -46,6 +46,7 @@ const squares = Array.from(document.querySelectorAll('.square'));
 //reset the game
 squares.map(square => square.textContent = "");
 
+
 //logic for swapping between players
 let i = 0;
 squares.forEach(square => square.addEventListener('click', (e) => {
@@ -55,3 +56,30 @@ squares.forEach(square => square.addEventListener('click', (e) => {
     }
 }))
 
+//logic for continuous check if someone has won
+let winningCombos = ['012', '036', '048', '147', '246', '258', '345', '678'];
+
+let playerX = ['0', '3', '2', '7', '8'];
+
+if (playerX.includes('0')) {
+    if (playerX.includes('1') && playerX.includes('2')) console.log('someone won');
+    if (playerX.includes('3') && playerX.includes('6')) console.log('someone won');
+    if (playerX.includes('4') && playerX.includes('8')) console.log('someone won');
+}
+
+if (playerX.includes('1')) {
+    if (playerX.includes('4') && playerX.includes('7')) console.log('someone won');
+}
+
+if (playerX.includes('2')) {
+    if (playerX.includes('4') && playerX.includes('6')) console.log('someone won');
+    if (playerX.includes('5') && playerX.includes('8')) console.log('someone won');
+}
+
+if (playerX.includes('3')) {
+    if (playerX.includes('4') && playerX.includes('5')) console.log('someone won');
+}
+
+if (playerX.includes('6')) {
+    if (playerX.includes('7') && playerX.includes('8')) console.log('someone won');
+}
