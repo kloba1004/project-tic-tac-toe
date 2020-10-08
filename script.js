@@ -57,29 +57,46 @@ squares.forEach(square => square.addEventListener('click', (e) => {
 }))
 
 //logic for continuous check if someone has won
-let winningCombos = ['012', '036', '048', '147', '246', '258', '345', '678'];
+const rowCombos = {},
+      remainingCombos = {},
+      n = 3,
+      array = [0,1,2,3,4,5,6,7,8];
 
-let playerX = ['0', '3', '2', '7', '8'];
 
-if (playerX.includes('0')) {
-    if (playerX.includes('1') && playerX.includes('2')) console.log('someone won');
-    if (playerX.includes('3') && playerX.includes('6')) console.log('someone won');
-    if (playerX.includes('4') && playerX.includes('8')) console.log('someone won');
+
+//create an object which containes row combinations possible for the win
+for (i = 0; i < n; i++) {
+    rowCombos[`row${i+1}`] = array.filter(element => array.indexOf(element) < (array.length/n + i*n) && (array.indexOf(element) >= n*i));
 }
 
-if (playerX.includes('1')) {
-    if (playerX.includes('4') && playerX.includes('7')) console.log('someone won');
+//create second object which containes column combinations possible for the win
+for (i = 0; i < n; i++) {
+    const column = [];
+
+    for (row in rowCombos) {
+        column.push(rowCombos[row][i]); 
+    }
+    remainingCombos[`column${i+1}`] = column;
 }
 
-if (playerX.includes('2')) {
-    if (playerX.includes('4') && playerX.includes('6')) console.log('someone won');
-    if (playerX.includes('5') && playerX.includes('8')) console.log('someone won');
+//place diagonal combinations possible for the win in the second object too
+const diagonal1 = [],
+      diagonal2 = [];
+
+let counter1 = 0,
+    counter2 = n - 1;
+
+for (row in rowCombos) {
+    diagonal1.push(rowCombos[row][counter1]);
+    counter1++;
+
+    diagonal2.push(rowCombos[row][counter2]);
+    counter2--;
 }
 
-if (playerX.includes('3')) {
-    if (playerX.includes('4') && playerX.includes('5')) console.log('someone won');
-}
+remainingCombos.diagonal1 = diagonal1;
+remainingCombos.diagonal2 = diagonal2;
 
-if (playerX.includes('6')) {
-    if (playerX.includes('7') && playerX.includes('8')) console.log('someone won');
-}
+
+console.table(rowCombos)
+console.table(remainingCombos)
