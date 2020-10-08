@@ -1,6 +1,5 @@
 const startButton = document.querySelector('.start-button');
 
-
 //add click events for form opening/closing
 startButton.addEventListener('click', () => {
     const form = document.querySelector('.form');
@@ -38,65 +37,100 @@ startButton.addEventListener('click', () => {
         form.reset();
         e.preventDefault();
     });
+
 });
+play();
+function play(){
+    //pull out squares from the display
+    const squares = Array.from(document.querySelectorAll('.square'));
+
+    //reset the squares
+    squares.map(square => square.textContent = "");
 
 
-const squares = Array.from(document.querySelectorAll('.square'));
+    //logic for swapping between players
+    let i = 0;
+    squares.forEach(square => square.addEventListener('click', (e) => {
+        if (e.target.textContent === "") {
+            if (i % 2 === 0) {
+                e.target.textContent = "X";
+                player1.checkWin();
+            } else {
+                e.target.textContent = "O";
+                player2.checkWin();
+            }
+            i++;
+        }
+    }));
 
-//reset the game
-squares.map(square => square.textContent = "");
+    const winningCombos = (() => {
+        //list all the possible winning combinations of rows/columns/diagonals into two objects, one for rows and second for rest
+        const rowCombos = {},
+              remainingCombos = {},
+              //number of rows/columns of tic tac toe, thus n equals 3
+              n = 3;
+    
+        //fill first object with rows
+        for (i = 0; i < n; i++) {
+            rowCombos[`row${i+1}`] = squares.filter(element => (squares.indexOf(element) < squares.length/n + i*n) && (squares.indexOf(element) >= n*i));
+        }
+    
+        //fill second object with columns
+        for (i = 0; i < n; i++) {
+            const column = [];
+    
+            for (row in rowCombos) {
+                column.push(rowCombos[row][i]); 
+            }
+            remainingCombos[`column${i+1}`] = column;
+        }
+    
+        //fill second object with diagonals
+        const diagonal1 = [],
+              diagonal2 = [];
+    
+        let counter1 = 0,
+            counter2 = n - 1;
+    
+        for (row in rowCombos) {
+            diagonal1.push(rowCombos[row][counter1]);
+            counter1++;
+    
+            diagonal2.push(rowCombos[row][counter2]);
+            counter2--;
+        }
+        remainingCombos.diagonal1 = diagonal1;
+        remainingCombos.diagonal2 = diagonal2;
 
+        return [rowCombos, remainingCombos];
+    })();
 
-//logic for swapping between players
-let i = 0;
-squares.forEach(square => square.addEventListener('click', (e) => {
-    if (e.target.textContent === "") {
-        i % 2 === 0 ? e.target.textContent = "X" : e.target.textContent = "O";
-        i++;
+    function player(name, sign) {
+        const getName = () => name;
+
+        const checkWin = (sign) => {
+            for (row in winningCombos[0]) {
+                const counter = row.reduce((counter, square) => square.textContent === sign ? counter + 1 : counter, 0);
+                if (counter === 3) {
+                    //reset the squares
+                    squares.map(square => square.textContent = "");
+                    announceWinner();
+                }
+            }
+
+            for (key in winningCombos[1]) {
+                const counter = key.reduce((counter, square) => square.textContent === sign ? counter + 1 : counter, 0);
+                if (counter === 3) {
+                    //reset the squares
+                    squares.map(square => square.textContent = "");
+                    announceWinner();
+                }
+            }
+        };
+        
+        return {getName, checkWin}
     }
-}))
 
-//logic for continuous check if someone has won
-const rowCombos = {},
-      remainingCombos = {},
-      n = 3,
-      array = [0,1,2,3,4,5,6,7,8];
-
-
-
-//create an object which containes row combinations possible for the win
-for (i = 0; i < n; i++) {
-    rowCombos[`row${i+1}`] = array.filter(element => array.indexOf(element) < (array.length/n + i*n) && (array.indexOf(element) >= n*i));
+    const player1 = player('Ante', 'X'),
+          player2 = player('Tina', 'O');
 }
-
-//create second object which containes column combinations possible for the win
-for (i = 0; i < n; i++) {
-    const column = [];
-
-    for (row in rowCombos) {
-        column.push(rowCombos[row][i]); 
-    }
-    remainingCombos[`column${i+1}`] = column;
-}
-
-//place diagonal combinations possible for the win in the second object too
-const diagonal1 = [],
-      diagonal2 = [];
-
-let counter1 = 0,
-    counter2 = n - 1;
-
-for (row in rowCombos) {
-    diagonal1.push(rowCombos[row][counter1]);
-    counter1++;
-
-    diagonal2.push(rowCombos[row][counter2]);
-    counter2--;
-}
-
-remainingCombos.diagonal1 = diagonal1;
-remainingCombos.diagonal2 = diagonal2;
-
-
-console.table(rowCombos)
-console.table(remainingCombos)
