@@ -36,12 +36,43 @@ startButton.addEventListener('click', () => {
         removeClass();
         form.reset();
         e.preventDefault();
+        //start the game
+        play(gameInfo.player1, gameInfo.player2);
     });
 
 });
-play()
 
-function play(){
+function play(firstPlayer, secondPlayer){
+
+    //create factory function to assign each player object his name, sign and checking of game state to announce his/her win in case of the  win after every move
+    function player(name, sign) {
+       
+        const announceWinner = () => console.log(`${name} has won!`)
+
+        const checkWin = () => {
+            for (row in winningCombos[0]) {
+                const counter = winningCombos[0][row].reduce((counter, square) => square.textContent === sign ? counter + 1 : counter, 0);
+                if (counter === 3) {
+                    //reset the squares
+                    squares.map(square => square.textContent = "");
+                    announceWinner();
+                }
+            }
+
+            for (key in winningCombos[1]) {
+                const counter = winningCombos[1][key].reduce((counter, square) => square.textContent === sign ? counter + 1 : counter, 0);
+                if (counter === 3) {
+                    //reset the squares
+                    squares.map(square => square.textContent = "");
+                    announceWinner();
+                }
+            }
+        };
+        return {name, sign, checkWin};
+    }
+    const player1 = player(firstPlayer, 'X');
+    const player2 = player(secondPlayer, 'O');
+
     //pull out squares from the display
     const squares = Array.from(document.querySelectorAll('.square'));
 
@@ -49,7 +80,7 @@ function play(){
     squares.map(square => square.textContent = "");
 
 
-    //logic for displaying each players move on screen and swapping between players 
+    //logic for displaying each players move on screen and swapping between players as well as checking for the winner after each move
     let i = 0;
     squares.forEach(square => square.addEventListener('click', (e) => {
         if (e.target.textContent === "") {
@@ -105,33 +136,4 @@ function play(){
 
         return [rowCombos, remainingCombos];
     })();
-
-    function player(name, sign) {
-        const getName = () => name;
-        const getSign = () => sign;
-
-        const checkWin = () => {
-            for (row in winningCombos[0]) {
-                const counter = winningCombos[0][row].reduce((counter, square) => square.textContent === getSign() ? counter + 1 : counter, 0);
-                if (counter === 3) {
-                    //reset the squares
-                    squares.map(square => square.textContent = "");
-                    announceWinner();
-                }
-            }
-
-            for (key in winningCombos[1]) {
-                const counter = winningCombos[1][key].reduce((counter, square) => square.textContent === sign ? counter + 1 : counter, 0);
-                if (counter === 3) {
-                    //reset the squares
-                    squares.map(square => square.textContent = "");
-                    announceWinner();
-                }
-            }
-        };
-        return {getName, checkWin}
-    }
-    const player1 = player('Ante', 'X');
-    const player2 = player('Tina', 'O');
-
 }
