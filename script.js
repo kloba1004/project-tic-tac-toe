@@ -39,7 +39,8 @@ startButton.addEventListener('click', () => {
     });
 
 });
-play();
+play()
+
 function play(){
     //pull out squares from the display
     const squares = Array.from(document.querySelectorAll('.square'));
@@ -48,12 +49,12 @@ function play(){
     squares.map(square => square.textContent = "");
 
 
-    //logic for swapping between players
+    //logic for displaying each players move on screen and swapping between players 
     let i = 0;
     squares.forEach(square => square.addEventListener('click', (e) => {
         if (e.target.textContent === "") {
             if (i % 2 === 0) {
-                e.target.textContent = "X";
+                e.target.textContent = "X";        
                 player1.checkWin();
             } else {
                 e.target.textContent = "O";
@@ -71,12 +72,12 @@ function play(){
               n = 3;
     
         //fill first object with rows
-        for (i = 0; i < n; i++) {
+        for (let i = 0; i < n; i++) {
             rowCombos[`row${i+1}`] = squares.filter(element => (squares.indexOf(element) < squares.length/n + i*n) && (squares.indexOf(element) >= n*i));
         }
     
         //fill second object with columns
-        for (i = 0; i < n; i++) {
+        for (let i = 0; i < n; i++) {
             const column = [];
     
             for (row in rowCombos) {
@@ -107,10 +108,11 @@ function play(){
 
     function player(name, sign) {
         const getName = () => name;
+        const getSign = () => sign;
 
-        const checkWin = (sign) => {
+        const checkWin = () => {
             for (row in winningCombos[0]) {
-                const counter = row.reduce((counter, square) => square.textContent === sign ? counter + 1 : counter, 0);
+                const counter = winningCombos[0][row].reduce((counter, square) => square.textContent === getSign() ? counter + 1 : counter, 0);
                 if (counter === 3) {
                     //reset the squares
                     squares.map(square => square.textContent = "");
@@ -119,7 +121,7 @@ function play(){
             }
 
             for (key in winningCombos[1]) {
-                const counter = key.reduce((counter, square) => square.textContent === sign ? counter + 1 : counter, 0);
+                const counter = winningCombos[1][key].reduce((counter, square) => square.textContent === sign ? counter + 1 : counter, 0);
                 if (counter === 3) {
                     //reset the squares
                     squares.map(square => square.textContent = "");
@@ -127,10 +129,9 @@ function play(){
                 }
             }
         };
-        
         return {getName, checkWin}
     }
+    const player1 = player('Ante', 'X');
+    const player2 = player('Tina', 'O');
 
-    const player1 = player('Ante', 'X'),
-          player2 = player('Tina', 'O');
 }
