@@ -56,8 +56,6 @@ function play(firstPlayer, secondPlayer){
             for (row in winningCombos[0]) {
                 const counter = winningCombos[0][row].reduce((counter, square) => square.textContent === sign ? counter + 1 : counter, 0);
                 if (counter === 3) {
-                    //reset the squares
-                    squares.map(square => square.textContent = "");
                     announceWinner();
                 }
             }
@@ -65,8 +63,6 @@ function play(firstPlayer, secondPlayer){
             for (columnOrDiagonal in winningCombos[1]) {
                 const counter = winningCombos[1][columnOrDiagonal].reduce((counter, square) => square.textContent === sign ? counter + 1 : counter, 0);
                 if (counter === 3) {
-                    //reset the squares
-                    squares.map(square => square.textContent = "");
                     announceWinner();
                 }
             }
@@ -97,8 +93,15 @@ function play(firstPlayer, secondPlayer){
             }
             i++;
         }
+        //simply announce tie if all squares are filled with content
+        if (i === 9) announceTie();
     }
     squares.forEach(square => square.addEventListener('click', displayMove));
+
+    const announceTie = () => {
+        console.log("It's a tie!");
+        squares.forEach(square => square.removeEventListener('click', displayMove));
+    }
 
     const winningCombos = (() => {
         //list all the possible winning combinations of rows/columns/diagonals into two objects, one for rows and second for rest
