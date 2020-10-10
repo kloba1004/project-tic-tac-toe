@@ -47,7 +47,10 @@ function play(firstPlayer, secondPlayer){
     //create factory function to assign each player object his name, sign and checking of game state to announce his/her win in case of the  win after every move
     function player(name, sign) {
        
-        const announceWinner = () => console.log(`${name} has won!`)
+        const announceWinner = () => {
+            console.log(`${name} has won!`);
+            squares.forEach(square => square.removeEventListener('click', displayMove));
+        }
 
         const checkWin = () => {
             for (row in winningCombos[0]) {
@@ -59,8 +62,8 @@ function play(firstPlayer, secondPlayer){
                 }
             }
 
-            for (key in winningCombos[1]) {
-                const counter = winningCombos[1][key].reduce((counter, square) => square.textContent === sign ? counter + 1 : counter, 0);
+            for (columnOrDiagonal in winningCombos[1]) {
+                const counter = winningCombos[1][columnOrDiagonal].reduce((counter, square) => square.textContent === sign ? counter + 1 : counter, 0);
                 if (counter === 3) {
                     //reset the squares
                     squares.map(square => square.textContent = "");
@@ -81,8 +84,9 @@ function play(firstPlayer, secondPlayer){
 
 
     //logic for displaying each players move on screen and swapping between players as well as checking for the winner after each move
+    //function below was originally inside addEventLister but had to extract it out so that I can apply removeEventListener once the game is done
     let i = 0;
-    squares.forEach(square => square.addEventListener('click', (e) => {
+    function displayMove(e) {
         if (e.target.textContent === "") {
             if (i % 2 === 0) {
                 e.target.textContent = "X";        
@@ -93,7 +97,8 @@ function play(firstPlayer, secondPlayer){
             }
             i++;
         }
-    }));
+    }
+    squares.forEach(square => square.addEventListener('click', displayMove));
 
     const winningCombos = (() => {
         //list all the possible winning combinations of rows/columns/diagonals into two objects, one for rows and second for rest
