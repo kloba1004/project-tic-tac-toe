@@ -43,6 +43,22 @@ body {
     text-align: center;
 }
 
+.headline-active {
+    animation: glowing 1s linear infinite;
+}
+
+@keyframes glowing {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
 .gameboard {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

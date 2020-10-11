@@ -3,7 +3,7 @@
     const form = document.querySelector('.form');
     const overlay = document.querySelector('#overlay');
     const cancelButton = document.querySelector('.cancel-button');
-    const displayResult = document.querySelectorAll('.headline');
+    const displayResult = Array.from(document.querySelectorAll('.headline'));
     const displayTurns = document.querySelectorAll('.turn');
 
     function removeClass() {
@@ -14,6 +14,7 @@
     startButton.addEventListener('click', () => {
         form.classList.add('form-active');
         overlay.className = 'overlay-active';
+        displayResult.forEach(headline => headline.classList.remove('headline-active'));
     });
 
     cancelButton.addEventListener('click', () => removeClass());
@@ -41,10 +42,12 @@
         //create factory function to assign each player object his name, sign and checking of game state to 
         //announce his/her win in case of the  win after every move
         function player(name, sign) {
+            
             const announceWinner = () => {
                 displayResult[0].textContent = name;
                 displayResult[1].textContent = 'has';
                 displayResult[2].textContent = 'won!';
+                displayResult.forEach(headline => headline.classList.add('headline-active'));
                 startButton.textContent = 'restart';
                 squares.forEach(square => square.removeEventListener('click', displayMove));
             };
@@ -108,6 +111,7 @@
             displayResult[0].textContent = "It's";
             displayResult[1].textContent = 'a';
             displayResult[2].textContent = 'tie!';
+            displayResult.forEach(headline => headline.classList.add('headline-active'));
             startButton.textContent = 'restart';
             squares.forEach(square => square.removeEventListener('click', displayMove));
         }
