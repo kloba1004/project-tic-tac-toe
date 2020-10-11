@@ -79,6 +79,15 @@ body {
     font-size: 1rem;    
 }
 
+.turn {
+    opacity: 0;
+    transition: 500ms ease-in-out;
+}
+
+.turn-active {
+    opacity: 1;
+}
+
 .start-button {
     font-size: 1.5rem;
     font-weight: 500;
@@ -219,4 +228,8 @@ input::placeholder {
     pointer-events: all;
     opacity: 0.75;
     z-index: 1;
+}
+
+.color-change {
+    color: red;
 }
