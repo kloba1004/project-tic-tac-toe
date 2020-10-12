@@ -6,17 +6,17 @@
     const displayResult = Array.from(document.querySelectorAll('.headline'));
     const displayTurns = document.querySelectorAll('.turn');
 
-    function removeClass() {
-        form.classList.remove('form-active');
-        overlay.classList.remove('overlay-active');
-    }
-
     startButton.addEventListener('click', () => {
         form.classList.add('form-active');
         overlay.className = 'overlay-active';
         displayResult.forEach(headline => headline.classList.remove('headline-active'));
     });
 
+    function removeClass() {
+        form.classList.remove('form-active');
+        overlay.classList.remove('overlay-active');
+    }
+    
     cancelButton.addEventListener('click', () => removeClass());
     overlay.addEventListener('click', () => removeClass());
 
@@ -39,6 +39,7 @@
         displayResult[0].textContent = firstPlayer;
         displayResult[1].textContent = 'vs.';
         displayResult[2].textContent = secondPlayer;
+        startButton.textContent = 'restart';
         //create factory function to assign each player object his name, sign and checking of game state to 
         //announce his/her win in case of the  win after every move
         function player(name, sign) {
@@ -48,7 +49,6 @@
                 displayResult[1].textContent = 'has';
                 displayResult[2].textContent = 'won!';
                 displayResult.forEach(headline => headline.classList.add('headline-active'));
-                startButton.textContent = 'restart';
                 squares.forEach(square => square.removeEventListener('click', displayMove));
             };
 
@@ -112,7 +112,6 @@
             displayResult[1].textContent = 'a';
             displayResult[2].textContent = 'tie!';
             displayResult.forEach(headline => headline.classList.add('headline-active'));
-            startButton.textContent = 'restart';
             squares.forEach(square => square.removeEventListener('click', displayMove));
         }
 
