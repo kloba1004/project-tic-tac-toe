@@ -10,6 +10,8 @@
         form.classList.add('form-active');
         overlay.className = 'overlay-active';
         displayResult.forEach(headline => headline.classList.remove('headline-active'));
+        submitInfo[1].disabled = false;
+        submitInfo[1].placeholder = "Name";
     });
 
     function removeClass() {
@@ -17,17 +19,33 @@
         overlay.classList.remove('overlay-active');
     }
 
+    window.onkeydown = (e) => {
+        if (e.key === 'Escape') removeClass();
+    };
     cancelButton.addEventListener('click', () => removeClass());
     overlay.addEventListener('click', () => removeClass());
 
     const submitInfo = document.querySelectorAll('input');
+
+    const singlePlayer = document.querySelector('#computer');
+    singlePlayer.addEventListener('change', () => {
+        submitInfo[1].disabled = true;
+        submitInfo[1].placeholder = "";
+    });
+
+    const multiPlayer = document.querySelector('#multiplayer');
+    multiPlayer.addEventListener('change', () => {
+        submitInfo[1].disabled = false;
+        submitInfo[1].placeholder = "Name";
+    });
+
     //add submit event for form to pull out values for the start of the game
     form.addEventListener('submit', (e) => {
-        let i = 3;
+        let gametype = 'multiplayer';
         //check which radio button(gametype) was checked
-        if (submitInfo[2].checked) i = 2;
+        if (submitInfo[2].checked) gametype = 'singleplayer';
         //start the game
-        play(submitInfo[0].value, submitInfo[1].value)    
+        gametype === 'multiplayer' ? play(submitInfo[0].value, submitInfo[1].value) : play(submitInfo[0].value, 'Computer');
         //remove classes from form and overlay, reset form inputs and prevent form from refreshing the page
         removeClass();
         form.reset();
@@ -35,9 +53,10 @@
     });
     let i,
         player1,
-        player;
+        player2;
     //pull out squares from the display
     const squares = Array.from(document.querySelectorAll('.square'));
+    let emptySquares;
 
     const winningCombos = (() => {
         //list all the possible winning combinations of rows/columns/diagonals into two objects, one for rows and second for rest
@@ -88,8 +107,7 @@
         displayResult[1].textContent = 'vs.';
         displayResult[2].textContent = secondPlayer;
         startButton.textContent = 'restart';
-        //create factory function to assign each player object his name, sign and checking of game state to 
-        //announce his/her win in case of the  win after every move
+
         const announceWinner = (playerName) => {
             displayResult[0].textContent = playerName;
             displayResult[1].textContent = 'has';
@@ -99,13 +117,14 @@
         };
 
         const checkWin = (name, sign) => {
+            let tieCheck = 0;
             for (row in winningCombos[0]) {
                 const counter = winningCombos[0][row].reduce((counter, square) =>
                     square.textContent === sign ? counter + 1 : counter, 0);
                 if (counter === 3) {
                     winningCombos[0][row].forEach(square => square.classList.add('color-change'));
                     announceWinner(name);
-                } else if ( counter !== 3 && i === 8) announceTie();
+                } else if ( counter !== 3 && i === 8) tieCheck++;
             }
 
             for (columnOrDiagonal in winningCombos[1]) {
@@ -114,8 +133,9 @@
                 if (counter === 3) {
                     winningCombos[1][columnOrDiagonal].forEach(square => square.classList.add('color-change'));
                     announceWinner(name);
-                } else if ( counter !== 3 && i === 8) announceTie();
+                } else if ( counter !== 3 && i === 8) tieCheck++;
             }
+            if (tieCheck === 8) announceTie();
         };
 
         function player(name, sign) {
@@ -140,13 +160,17 @@
                 if (i % 2 === 0) {
                     e.target.textContent = "X";
                     checkWin(player1.name, player1.sign);
-                     displayTurns[1].classList.add('turn-active');
+                    if (displayResult[1].textContent === 'vs.') displayTurns[1].classList.add('turn-active');
                     displayTurns[0].classList.remove('turn-active');
-                } else { 
+                    if (player2.name === 'Computer' && displayResult[1].textContent === 'vs.') {
+                        squares.forEach(square => square.removeEventListener('click', displayMove));
+                        setTimeout(playAI, 1000);
+                    }
+                } else  {
                     e.target.textContent = "O";
                     checkWin(player2.name, player2.sign);
                     displayTurns[1].classList.remove('turn-active');
-                    displayTurns[0].classList.add('turn-active');
+                    if (displayResult[1].textContent === 'vs.') displayTurns[0].classList.add('turn-active');
                 }
                 i++;
             }
@@ -160,6 +184,21 @@
             displayResult[2].textContent = 'tie!';
             displayResult.forEach(headline => headline.classList.add('headline-active'));
             squares.forEach(square => square.removeEventListener('click', displayMove));
+        }
+
+        function playAI() {
+            let index;
+            do {
+                index = Math.floor(Math.random()*10);
+                if (index === 9) index--;
+            } while (squares[index].textContent !== "")
+            console.log(index);
+            squares[index].textContent = "O";
+            checkWin(player2.name, player2.sign);
+            displayTurns[1].classList.remove('turn-active');
+            if (displayResult[1].textContent === 'vs.') displayTurns[0].classList.add('turn-active');
+            i++;
+            squares.forEach(square => square.addEventListener('click', displayMove));
         }
     }
 })();
